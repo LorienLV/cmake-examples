@@ -30,7 +30,7 @@ main: $(MAIN)
 # Generate executables
 #
 $(MAIN): $(MAIN_OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $^ -o $@
 
 #
 # Generate objects.
