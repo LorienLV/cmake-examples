@@ -33,7 +33,7 @@ main: $(MAIN)
 # Generate executables
 #
 $(MAIN): $(MAIN_OBJS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) $^ $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 #
 # Generate objects.
@@ -48,4 +48,3 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf $(INCLUDEDIR)/*
