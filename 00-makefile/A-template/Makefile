@@ -31,7 +31,7 @@ MAIN_OBJS:=$(addprefix $(OBJ_DIR)/, $(MAIN_OBJS)) # Append the OBJ_DIR to the ob
 # Generate executables
 #
 $(MAIN): $(MAIN_OBJS)
-	$(CXX) $(LDFLAGS) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 #
 # Generate objects.
