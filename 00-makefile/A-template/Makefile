@@ -1,48 +1,53 @@
 # Set compiler.
-CXX=g++
+# CC=gcc
+CXX:=g++
 
 # Set flags.
-CXXFLAGS=-Wall -O3 -std=c++17 -fopenmp
-CXXFLAGS+=-MD -MP # Autogenerate dependencies. MUST NOT BE DELETED.
+# CFLAGS=
+CXXFLAGS:=-Wall -O3 -std=c++17
+DEPFLAGS:=-MD -MP # Autogenerate dependencies.
+CPPFLAGS:=-DVALUE=1
+LDFLAGS:=-lm
+# INCLUDES:=
 
 # Directories.
-BUILDDIR=build
-SRCDIR=src
-OBJDIR=$(BUILDDIR)/obj
+BUILD_DIR:=build
+SRC_DIR:=src
+OBJ_DIR:=$(BUILD_DIR)/obj
 
 # Files.
-SRCS:=$(shell find $(SRCDIR) -name "*.cpp")
-OBJS:=$(subst $(SRCDIR),$(OBJDIR),$(SRCS:%.cpp=%.o))
-DEPS:=$(subst $(SRCDIR),$(OBJDIR),$(SRCS:%.cpp=%.d))
+SRCS:=$(shell find $(SRC_DIR) -name "*.cpp")
+OBJS:=$(subst $(SRC_DIR),$(OBJ_DIR),$(SRCS:%.cpp=%.o))
+DEPS:=$(subst $(SRC_DIR),$(OBJ_DIR),$(SRCS:%.cpp=%.d))
 
 #
 # Executables.
 #
-MAIN=$(BUILDDIR)/main
-MAIN_OBJS=$(OBJDIR)/main.o
+MAIN:=$(BUILD_DIR)/main
+MAIN_OBJS:=main.o
+MAIN_OBJS:=$(addprefix $(OBJ_DIR)/, $(MAIN_OBJS)) # Append the OBJ_DIR to the objets.
+
+#
+# Generate executables
+#
+$(MAIN): $(MAIN_OBJS)
+	$(CXX) $(LDFLAGS) $(CXXFLAGS) $^ -o $@
+
+#
+# Generate objects.
+#
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p $(@D)
+	$(CXX) $(INCLUDES) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+# Include dependencies.
+-include $(DEPS)
 
 .PHONY: all
 all: main
 
 main: $(MAIN)
 
-#
-# Generate executables
-#
-$(MAIN): $(MAIN_OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
-
-#
-# Generate objects.
-#
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Include dependencies.
--include $(DEPS)
-
 .PHONY: clean
 clean:
-	rm -rf $(BUILDDIR)/*
-	rm -rf $(INCLUDEDIR)/*
+	rm -rf $(BUILD_DIR)/*
