@@ -43,6 +43,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 # Include dependencies.
 -include $(DEPS)
 
+# The default goal is the next goal.
+.DEFAULT_GOAL:=
 .PHONY: all
 all: main
 
